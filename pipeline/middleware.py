@@ -13,8 +13,7 @@ class MinifyHTMLMiddleware(object):
             raise MiddlewareNotUsed
 
     def process_response(self, request, response):
-        if response.has_header('Content-Type') and 'text/html' in response['Content-Type']:
-            try:
+        if response.has_header('Content-Type') and 'text/html' in response['Content-Type'] and not getattr(request, '_cache_update_cache', True):
                 response.content = minify_html(response.content.strip())
                 response['Content-Length'] = str(len(response.content))
             except DjangoUnicodeDecodeError:
